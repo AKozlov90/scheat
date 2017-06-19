@@ -107,13 +107,13 @@ db.changes({
   
 // ACCORDION
 
-function foldAccordion(todo, event) {
+function foldAccordion(event, todo) {
 var foldArea = document.getElementById('panel_' + todo._id);
   
-        if (panel.style.display === "block") {
-            panel.style.display = "none";
+        if (foldArea.style.display === "block") {
+            foldArea.style.display = "none";
         } else {
-            panel.style.display = "block";
+            foldArea.style.display = "block";
         }
     
 }
