@@ -1,0 +1,26 @@
+{
+  "name": "scheet",
+  "version": "0.0.0",
+  "description": "Cheatsheet 2.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "console.log('Sheet Online')"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AKozlov90/cheatmap"
+  },
+  "keywords": [
+    "cheatsheet"
+  ],
+  "author": "Aleko",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/AKozlov90/cheatmap/issues"
+  },
+  "dependencies": {
+    "pouchdb": "~6.2.0",
+    "pug": "~2.0.0-beta.12",
+    "express": "~4.15.2"
+  }
+}
