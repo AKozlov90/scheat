@@ -9,7 +9,7 @@
   var editBtn = document.getElementById('editBtn');
   var db = new PouchDB('todos');
   var remoteCouch = false;
-  var draggableState = 0;
+  var draggableState = false;
 
   
 
@@ -107,9 +107,9 @@ db.changes({
   
 // ACCORDION
 
-function foldAccordion(event, todo) {
+function foldAccordion(todo, event) {
 var foldArea = document.getElementById('panel_' + todo._id);
-  
+  console.log('event = ' + event + 'And todo =' + todo + 'ID =' + todo.id);
         if (foldArea.style.display === "block") {
             foldArea.style.display = "none";
         } else {
@@ -119,22 +119,28 @@ var foldArea = document.getElementById('panel_' + todo._id);
 }
 
   function initMoveMode(event) {
-  var allNotes = document.getElemtsByClassName('note-Container')
-  var editMoveStatus = true;
+  var allNotes = document.getElementsByClassName('note-Container');
   var i;
-  console.log(allNotes);
-for (i = 0; i < allNotes.length; i++) {
-    allNotes[i].onclick = function(){
-      this.draggable(editMoveStatus)
-      $(this).draggable(editMoveStatus);
-      $(editMoveStatus ).draggable();   // This only works with this line of code. Why?
-      console.log(state);
-      editMoveStatus = "false";
-      console.log('Edit Change run')
-    }
+//  console.log(edi);
+    if (draggableState === true){
+       draggableState = false;
+       console.log('Status = ' + draggableState)
+     } else {
+       draggableState = true;
+              console.log('Status = ' + draggableState)
 
-}}
-      editBtn.addEventListener('click', initMoveMode, false);
+     }
+    
+for (i = 0; i < allNotes.length; i++) {
+         console.log('Status = ' + draggableState)
+    allNotes[i].setAttribute('draggable', draggableState);
+    }
+     
+  }
+  
+      editBtn.addEventListener('click', initMoveMode.bind(this, event));
+  
+  
   // Create List of Notes 
   // Showing a scheat
   function createTodoListItem(todo) {
@@ -152,7 +158,7 @@ for (i = 0; i < allNotes.length; i++) {
     btnacc.type = 'button';
     btnacc.appendChild(title);
     btnacc.id = 'btnacc_' + todo._id;
-    btnacc.onclick = foldAccordion(this, todo);
+    btnacc.addEventListener('click', foldAccordion.bind(this, todo));
 
     //save Icon
     var SaveIcn = document.createElement('span');
