@@ -10,7 +10,8 @@
   var db = new PouchDB('todos');
   var remoteCouch = false;
   var draggableState = false;
-
+  var allNotes = document.getElementsByClassName('note-Container');
+  var lastDragTargetId
   
 
 db.changes({
@@ -110,51 +111,97 @@ db.changes({
 function foldAccordion(todo, event) {
 var foldArea = document.getElementById('panel_' + todo._id);
   console.log('event = ' + event + 'And todo =' + todo + 'ID =' + todo.id);
-        if (foldArea.style.display === "block") {
+        if (event.target.classList.contains('drop-target') === true){
+                            if (foldArea.style.display === "block" ) {
+                                        foldArea.style.display = "none";
+        }else {
+                      foldArea.style.display = "block";
+        }} else if (draggableState === true ) {
+          console.log('You are in edit mode, no accordion')
+        }else if (foldArea.style.display === "block" ) {
             foldArea.style.display = "none";
-        } else {
-            foldArea.style.display = "block";
+        }else {
+                      foldArea.style.display = "block";
+
         }
     
 }
+ 
 
+  
+  
+  
+  
+  
+  
+  
+// DRAG ACTIVATION
   function initMoveMode(event) {
   var allNotes = document.getElementsByClassName('note-Container');
+  var allTitles = document.getElementsByClassName('btnacc');
   var i;
-//  console.log(edi);
+    
+  //decide if drag off or on
     if (draggableState === true){
        draggableState = false;
-       console.log('Status = ' + draggableState)
      } else {
        draggableState = true;
-              console.log('Status = ' + draggableState)
-
      }
     
+    // Make Draggable On or Off
 for (i = 0; i < allNotes.length; i++) {
          console.log('Status = ' + draggableState)
     allNotes[i].setAttribute('draggable', draggableState);
-    }
-     
+       }
+for (i = 0; i< allTitles.length; i++) {
+  allTitles.classList
+}
+    
+    
   }
-  
+  //drag activation is on Edit Button
       editBtn.addEventListener('click', initMoveMode.bind(this, event));
+  // 
   
   
-  // Create List of Notes 
-  // Showing a scheat
+  
+      
+                          
+  function dropTargetAccordion(event, todo) {
+
+  //var dropHere = event.target; 
+  //  if ( event.target.classList.contains == "drop-target" ) {
+  //       event.target.style.border = "3px dotted green";
+    }
+  
+  // By default, data/elements cannot be dropped in other elements. To allow a drop, we must prevent the default handling of the element
+                          
+ function draggedOnNote(todo, event) {
+  console.log(todo._id);
+ if ( todo._id != lastDragTargetId){
+   console.log('timer started 3000')
+   lastDragTargetId = todo._id;
+   setTimeout(foldAccordion(todo, event), 3000)
+ }
+    
+//  this.insertbefore(draggedNote, dropHere);
+}
+
+  
+  // building a note
   function createTodoListItem(todo) {
     
     //Button Label && Title
     var title = document.createElement('div');
     title.appendChild(document.createTextNode(todo.title));
     title.id = 'title_' + todo._id;
+    title.className = 'noteTitle, appendNoteOver';
     title.innerHTML = todo.title;
     
     //Accordion Button
     var btnacc = document.createElement('BUTTON');
     //btnacc.appendChild( document.createTextNode(todo.title));
-    btnacc.className = 'btnacc, btn-primary, accordion';
+    btnacc.className = 'btnacc, btn-primary, accordion, appendNoteOver';
     btnacc.type = 'button';
     btnacc.appendChild(title);
     btnacc.id = 'btnacc_' + todo._id;
@@ -212,6 +259,7 @@ for (i = 0; i < allNotes.length; i++) {
     // SubList to order childs
     var subList = document.createElement('ul')
     subList.id = 'sublist_' + todo._id;
+    subList.className = 'sublist'
     subList.appendChild(divDisplay);
     
     // The List Item    ! Note Master Parent
@@ -219,6 +267,7 @@ for (i = 0; i < allNotes.length; i++) {
     li.id = 'li_' + todo._id;
     li.className = 'note-Container';
     li.appendChild(subList);
+    li.addEventListener("dragover", draggedOnNote.bind(this, todo));
     
     
     
@@ -226,8 +275,9 @@ for (i = 0; i < allNotes.length; i++) {
     return li;
   }
 
-  
-  //  Callin the Lists Items
+    // Create List of Notes 
+
+  //  building the Lists Items
   function redrawTodosUI(todos) {
     var ul = document.getElementById('todo-list');
     ul.innerHTML = '';
@@ -261,6 +311,8 @@ for (i = 0; i < allNotes.length; i++) {
   }
 
 })();
+
+
 
 
 
